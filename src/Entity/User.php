@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,8 +15,6 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @var Game[]
-     * @ORM\OneToMany(targetEntity="Game", mappedBy="user")
      */
     private $id;
 
@@ -32,6 +32,16 @@ class User
      * @ORM\Column(type="text")
      */
     private $password;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="owner")
+     */
+    private $games;
+
+    public function __construct()
+    {
+        $this->games = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -70,6 +80,37 @@ class User
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Game[]
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): self
+    {
+        if (!$this->games->contains($game)) {
+            $this->games[] = $game;
+            $game->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): self
+    {
+        if ($this->games->contains($game)) {
+            $this->games->removeElement($game);
+            // set the owning side to null (unless already changed)
+            if ($game->getOwner() === $this) {
+                $game->setOwner(null);
+            }
+        }
 
         return $this;
     }

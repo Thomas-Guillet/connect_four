@@ -17,20 +17,6 @@ class Game
     private $id;
 
     /**
-     * @var Owner
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="Game", cascade={"persist"})
-     * @ORM\Column(type="integer")
-     */
-    private $owner;
-
-    /**
-     * @var Player
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="Game", cascade={"persist"})
-     * @ORM\Column(type="integer")
-     */
-    private $player;
-
-    /**
      * @ORM\Column(type="string", length=8)
      */
     private $state;
@@ -55,33 +41,21 @@ class Game
      */
     private $created_at;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="games")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $owner;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="games")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $player;
+
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getOwner(): ?int
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(int $owner): self
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
-    public function getPlayer(): ?int
-    {
-        return $this->player;
-    }
-
-    public function setPlayer(?int $player): self
-    {
-        $this->player = $player;
-
-        return $this;
     }
 
     public function getState(): ?string
@@ -140,6 +114,30 @@ class Game
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?User
+    {
+        return $this->player;
+    }
+
+    public function setPlayer(?User $player): self
+    {
+        $this->player = $player;
 
         return $this;
     }
