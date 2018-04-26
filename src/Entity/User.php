@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @UniqueEntity(fields="mail", message="Email already taken")
  * @UniqueEntity(fields="username", message="Username already taken")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -37,14 +37,25 @@ class User
     private $mail;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=164)
      */
     private $password;
+
+     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
 
     public function __construct()
     {
         $this->games = new ArrayCollection();
     }
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="owner")
+     */
+    private $games;
 
     public function getId()
     {
@@ -87,6 +98,18 @@ class User
         return $this;
     }
 
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $password): self
+    {
+        $this->plainPassword = $password;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Game[]
      */
@@ -122,4 +145,12 @@ class User
     {
         return array('ROLE_USER');
     }
+
+    public function getSalt()
+   {
+       return null;
+   }
+   public function eraseCredentials()
+   {
+   }
 }

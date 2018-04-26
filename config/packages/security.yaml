@@ -1,5 +1,7 @@
 security:
     access_denied_url: /error403
+    encoders:
+        App\Entity\User: bcrypt
     providers:
         my_entity_provider:
             entity:
@@ -18,7 +20,7 @@ security:
                 password_parameter: _password
             logout:
                 path:   /logout
-                target: /admin
+                target: /
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

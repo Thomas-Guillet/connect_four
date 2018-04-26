@@ -48,7 +48,7 @@ class Game
     private $owner;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="games")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=true)
      */
     private $player;
