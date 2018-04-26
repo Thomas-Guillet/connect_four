@@ -32,12 +32,17 @@ class GameController extends Controller
             $entityManager->flush();
 
             $_SESSION['game'] = $game->getId();
+
+            $sStatutPlayer = 'the owner';
+            
         }else{
             $game = $this->getDoctrine()->getRepository(Game::class)->find($_SESSION['game']);
-            if($game->getId() != $aUser->getId()){
+            if($game->getOwner()->getId() != $aUser->getId()){
                 if($game->getPlayer() == null){
                     $game->setPlayer($aUser);
                     $this->getDoctrine()->getManager()->flush();
+                    $sStatutPlayer = 'a player';
+                }else if($game->getPlayer()->getId() == $aUser->getId()){
                     $sStatutPlayer = 'a player';
                 }else{
                     $sStatutPlayer = 'a viewer';

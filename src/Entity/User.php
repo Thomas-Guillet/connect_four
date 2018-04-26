@@ -128,19 +128,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeGame(Game $game): self
-    {
-        if ($this->games->contains($game)) {
-            $this->games->removeElement($game);
-            // set the owning side to null (unless already changed)
-            if ($game->getOwner() === $this) {
-                $game->setOwner(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getRoles()
     {
         return array('ROLE_USER');
